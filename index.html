@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayurveda Essentials</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f8f8;
+        }
+        .ayurveda-bg {
+            background-color: #4A8999;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .page {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+        }
+        .product-img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4A8999;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="ayurveda-bg text-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold">Ayurveda Essentials</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link" data-page="home">Home</a>
+                    <a href="#" class="nav-link" data-page="products">Products</a>
+                    <a href="#" class="nav-link" data-page="about">About</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="cart-btn" class="text-white text-xl">
+                            <i class="bi bi-cart3"></i>
+                            <span id="cart-count" class="cart-badge bg-yellow-400 text-black text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                        </button>
+                    </div>
+                    <button class="md:hidden text-xl" id="menu-toggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden mt-4 hidden">
+                <nav class="flex flex-col space-y-3 pb-3">
+                    <a href="#" class="nav-link" data-page="home">Home</a>
+                    <a href="#" class="nav-link" data-page="products">Products</a>
+                    <a href="#" class="nav-link" data-page="about">About</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <section class="mb-12 relative overflow-hidden rounded-lg shadow-lg">
+                <img src="https://images.unsplash.com/photo-1545041851-3bc6f8f43333?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Ayurvedic herbs and treatments" class="w-full h-80 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center">
+                    <div class="text-white p-8 max-w-lg">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ancient Wisdom for Modern Wellness</h2>
+                        <p class="mb-6">Discover authentic Ayurvedic products crafted with traditional methods and premium ingredients.</p>
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-full font-medium transition duration-300 nav-link" data-page="products">Shop Now</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Featured Products</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="featured-products">
+                    <!-- Featured products will be loaded here -->
+                    <p class="col-span-full text-center text-gray-500">Loading featured products...</p>
+                </div>
+                <div class="text-center mt-8">
+                    <button class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-full font-medium transition duration-300 nav-link" data-page="products">View All Products</button>
+                </div>
+            </section>
+
+            <section class="bg-gray-100 p-8 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Why Choose Ayurveda?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="text-4xl text-teal-600 mb-4 text-center">
+                            <i class="bi bi-flower1"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-2 text-center">Natural Ingredients</h3>
+                        <p class="text-gray-600 text-center">All our products are made from 100% natural herbs and ingredients.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="text-4xl text-teal-600 mb-4 text-center">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-2 text-center">Ancient Wisdom</h3>
+                        <p class="text-gray-600 text-center">Formulas based on 5,000+ years of Ayurvedic knowledge and practice.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="text-4xl text-teal-600 mb-4 text-center">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-2 text-center">Holistic Health</h3>
+                        <p class="text-gray-600 text-center">Products designed to balance mind, body, and spirit for complete wellness.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Products Page -->
+        <div id="products" class="page">
+            <h1 class="text-3xl font-bold mb-8 text-center">Our Ayurvedic Products</h1>
+
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <label for="category-filter" class="mr-2">Filter by:</label>
+                    <select id="category-filter" class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="all">All Categories</option>
+                        <option value="herbs">Herbs & Supplements</option>
+                        <option value="oils">Essential Oils</option>
+                        <option value="skincare">Skincare</option>
+                        <option value="teas">Herbal Teas</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="sort-by" class="mr-2">Sort by:</label>
+                    <select id="sort-by" class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="default">Recommended</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Name: A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="all-products">
+                <!-- Products will be loaded here -->
+                <p class="col-span-full text-center text-gray-500">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="about" class="page">
+            <h1 class="text-3xl font-bold mb-8 text-center">About Ayurveda Essentials</h1>
+            
+            <div class="bg-white p-8 rounded-lg shadow-md mb-10">
+                <h2 class="text-2xl font-semibold mb-4">Our Story</h2>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <img src="https://images.unsplash.com/photo-1589242753706-89b41947de1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Our store" class="rounded-lg shadow-md w-full md:w-1/2">
+                    <div>
+                        <p class="mb-4">Founded in 2010, Ayurveda Essentials began as a small family shop dedicated to bringing authentic Ayurvedic remedies to the modern world. Our founder, inspired by traditional healing methods passed down through generations, created a brand that bridges ancient wisdom with contemporary wellness needs.</p>
+                        <p>Today, we source the finest herbs and ingredients from sustainable farms across India and Sri Lanka, ensuring that each product maintains the purity and potency that Ayurvedic medicine demands.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-lg shadow-md mb-10">
+                <h2 class="text-2xl font-semibold mb-4">Our Commitment</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="border border-teal-100 p-4 rounded-lg">
+                        <div class="text-3xl text-teal-600 mb-3 text-center">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h3 class="text-lg font-medium mb-2 text-center">Quality</h3>
+                        <p class="text-gray-600 text-center">We test all products for purity and potency before they reach our shelves.</p>
+                    </div>
+                    <div class="border border-teal-100 p-4 rounded-lg">
+                        <div class="text-3xl text-teal-600 mb-3 text-center">
+                            <i class="bi bi-tree"></i>
+                        </div>
+                        <h3 class="text-lg font-medium mb-2 text-center">Sustainability</h3>
+                        <p class="text-gray-600 text-center">All our packaging is eco-friendly and our ingredients are ethically sourced.</p>
+                    </div>
+                    <div class="border border-teal-100 p-4 rounded-lg">
+                        <div class="text-3xl text-teal-600 mb-3 text-center">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h3 class="text-lg font-medium mb-2 text-center">Education</h3>
+                        <p class="text-gray-600 text-center">We're dedicated to teaching the principles of Ayurveda and holistic health.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="mb-2"><strong>Address:</strong> 123 Herbal Lane, Wellness City, WC 54321</p>
+                        <p class="mb-2"><strong>Email:</strong> info@ayurvedaessentials.com</p>
+                        <p class="mb-2"><strong>Phone:</strong> (123) 456-7890</p>
+                        <p class="mb-4"><strong>Hours:</strong> Monday-Saturday, 9am-6pm</p>
+                        <div class="flex space-x-4 mt-4">
+                            <a href="#" class="text-2xl text-teal-600 hover:text-teal-800"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="text-2xl text-teal-600 hover:text-teal-800"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="text-2xl text-teal-600 hover:text-teal-800"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-2xl text-teal-600 hover:text-teal-800"><i class="bi bi-pinterest"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label for="name" class="block mb-1">Your Name</label>
+                                <input type="text" id="name" name="name" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                            </div>
+                            <div>
+                                <label for="message" class="block mb-1">Message</label>
+                                <textarea id="message" name="message" rows="4" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                            </div>
+                            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-md font-medium transition duration-300">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 w-full md:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-40">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Your Cart</h2>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-800">
+                    <i class="bi bi-x-lg text-xl"></i>
+                </button>
+            </div>
+            <div id="cart-items" class="flex-grow overflow-y-auto">
+                <!-- Cart items will be displayed here -->
+                <p id="empty-cart-message" class="text-center text-gray-500 py-6">Your cart is empty</p>
+            </div>
+            <div class="border-t pt-4 mt-4">
+                <div class="flex justify-between mb-4">
+                    <span class="font-semibold">Subtotal:</span>
+                    <span id="cart-subtotal">$0.00</span>
+                </div>
+                <button id="checkout-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-md font-medium transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Checkout
+                </button>
+                <button id="continue-shopping" class="w-full mt-3 border border-teal-600 text-teal-600 py-2 rounded-md font-medium hover:bg-teal-50 transition duration-300">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Checkout</h2>
+                <button id="close-checkout" class="text-gray-500 hover:text-gray-800">
+                    <i class="bi bi-x-lg text-xl"></i>
+                </button>
+            </div>
+            <form id="checkout-form" class="space-y-4">
+                <div>
+                    <label for="full-name" class="block mb-1">Full Name</label>
+                    <input type="text" id="full-name" name="full-name" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div>
+                    <label for="email-address" class="block mb-1">Email Address</label>
+                    <input type="email" id="email-address" name="email-address" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+                <div>
+                    <label for="shipping-address" class="block mb-1">Shipping Address</label>
+                    <textarea id="shipping-address" name="shipping-address" rows="3" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required></textarea>
+                </div>
+                <div>
+                    <label for="payment-method" class="block mb-1">Payment Method</label>
+                    <select id="payment-method" name="payment-method" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                        <option value="">Select payment method</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div id="order-summary" class="bg-gray-100 p-4 rounded-md">
+                    <h3 class="font-semibold mb-2">Order Summary</h3>
+                    <div class="flex justify-between mb-1">
+                        <span>Subtotal:</span>
+                        <span id="order-subtotal">$0.00</span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                        <span>Shipping:</span>
+                        <span>$5.00</span>
+                    </div>
+                    <div class="flex justify-between font-semibold">
+                        <span>Total:</span>
+                        <span id="order-total">$0.00</span>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-md font-medium transition duration-300">
+                    Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md mx-4 text-center">
+            <div class="text-5xl text-green-500 mb-4">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">Order Placed Successfully!</h2>
+            <p class="mb-6">Thank you for your purchase. We've sent a confirmation email with your order details.</p>
+            <p class="mb-6"><strong>Order Number:</strong> <span id="order-number"></span></p>
+            <button id="continue-shopping-final" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-md font-medium transition duration-300">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Ayurveda Essentials</h3>
+                    <p class="text-gray-400">Ancient wisdom for modern wellness, bringing traditional Ayurvedic remedies to enhance your daily life.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white nav-link" data-page="home">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white nav-link" data-page="products">Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white nav-link" data-page="about">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Herbs & Supplements</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Essential Oils</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Skincare</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Herbal Teas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to receive updates on new products and special offers.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-3 py-2 w-full rounded-l-md focus:outline-none text-black">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 px-4 rounded-r-md">
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 Ayurveda Essentials. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-pinterest"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Generate a random user ID and store it in localStorage
+        function generateUserId() {
+            if (!localStorage.getItem('userId')) {
+                const userId = 'user_' + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('userId', userId);
+            }
+            return localStorage.getItem('userId');
+        }
+
+        const userId = generateUserId();
+        const appSlug = 'ayurveda-store';
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Sample products data
+        const productsData = [
+            {
+                id: 'p1',
+                name: 'Ashwagandha Root Powder',
+                price: 19.99,
+                category: 'herbs',
+                description: 'An adaptogenic herb known for reducing stress and anxiety.',
+                image: 'https://images.unsplash.com/photo-1611413716545-541f7ffc49c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p2',
+                name: 'Turmeric & Ginger Tea',
+                price: 12.99,
+                category: 'teas',
+                description: 'Herbal tea blend with anti-inflammatory properties.',
+                image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p3',
+                name: 'Neem Face Wash',
+                price: 15.99,
+                category: 'skincare',
+                description: 'Purifying face cleanser with antibacterial neem extract.',
+                image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p4',
+                name: 'Brahmi Brain Tonic',
+                price: 24.99,
+                category: 'herbs',
+                description: 'Supports cognitive function and memory.',
+                image: 'https://images.unsplash.com/photo-1524638067-feba7e8ed70f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p5',
+                name: 'Lavender Essential Oil',
+                price: 18.99,
+                category: 'oils',
+                description: 'Pure essential oil for relaxation and better sleep.',
+                image: 'https://images.unsplash.com/photo-1608571423539-e951a50fae23?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p6',
+                name: 'Triphala Supplement',
+                price: 22.99,
+                category: 'herbs',
+                description: 'Traditional formula for digestive health.',
+                image: 'https://images.unsplash.com/photo-1525434280327-e525e03f17ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p7',
+                name: 'Kumkumadi Brightening Face Oil',
+                price: 29.99,
+                category: 'skincare',
+                description: 'Luxurious oil blend for radiant skin.',
+                image: 'https://images.unsplash.com/photo-1597931752949-98c74b5b159a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p8',
+                name: 'Eucalyptus Essential Oil',
+                price: 16.99,
+                category: 'oils',
+                description: 'Refreshing oil for respiratory support.',
+                image: 'https://images.unsplash.com/photo-1600857544200-b2f468a9ea6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p9',
+                name: 'Tulsi Holy Basil Tea',
+                price: 14.99,
+                category: 'teas',
+                description: 'Sacred herb tea for stress relief and immunity.',
+                image: 'https://images.unsplash.com/photo-1564890369861-4293e57221c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p10',
+                name: 'Aloe Vera Gel',
+                price: 13.99,
+                category: 'skincare',
+                description: 'Pure aloe vera for skin healing and hydration.',
+                image: 'https://images.unsplash.com/photo-1626397585592-fb93826a14a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p11',
+                name: 'Rose Water Facial Toner',
+                price: 17.99,
+                category: 'skincare',
+                description: 'Soothing natural toner for all skin types.',
+                image: 'https://images.unsplash.com/photo-1570554886111-e5e8399e80fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'p12',
+                name: 'Amla Powder',
+                price: 20.99,
+                category: 'herbs',
+                description: 'Vitamin C rich superfood for immunity and hair health.',
+                image: 'https://images.unsplash.com/photo-1620208344179-e62d3c9e9afb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+            }
+        ];
+
+        // Save products to database
+        async function saveProductsToDb() {
+            showLoading();
+            try {
+                // First check if products already exist
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 8yz7EJHfcObtkmvSfpdz7HvbaGr1'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        appSlug: appSlug,
+                        action: 'read',
+                        table: 'products'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.error && data.data && data.data.length > 0) {
+                    // Products already exist, no need to create
+                    console.log('Products already exist in database');
+                    hideLoading();
+                    return data.data.map(item => item.data);
+                }
+                
+                // Products don't exist, create them
+                const createResponse = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 8yz7EJHfcObtkmvSfpdz7HvbaGr1'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        appSlug: appSlug,
+                        action: 'create',
+                        table: 'products',
+                        data: { products: productsData }
+                    })
+                });
+                
+                const createData = await createResponse.json();
+                console.log('Products saved to database', createData);
+                hideLoading();
+                return productsData;
+            } catch (error) {
+                console.error('Error saving products to database:', error);
+                hideLoading();
+                return productsData; // Fallback to local data if DB fails
+            }
+        }
+
+        // Load products from database or use local data
+        async function loadProducts() {
+            try {
+                const products = await saveProductsToDb();
+                displayProducts(products);
+                displayFeaturedProducts(products.slice(0, 3)); // Display first 3 products as featured
+            } catch (error) {
+                console.error('Error loading products:', error);
+                // Fallback to local data
+                displayProducts(productsData);
+                displayFeaturedProducts(productsData.slice(0, 3));
+            }
+        }
+
+        // Display all products
+        function displayProducts(products) {
+            const productsContainer = document.getElementById('all-products');
+            if (!productsContainer) return;
+
+            productsContainer.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">No products found.</p>';
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300';
+                productCard.setAttribute('data-category', product.category);
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="w-full product-img">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-3 text-sm">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-teal-600 font-bold">$${product.price.toFixed(2)}</span>
+                            <button class="add-to-cart bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded-full text-sm transition duration-300" data-id="${product.id}">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+
+                // Add event listener to Add to Cart button
+                const addToCartBtn = productCard.querySelector('.add-to-cart');
+                addToCartBtn.addEventListener('click', () => addToCart(product));
+            });
+        }
+
+        // Display featured products
+        function displayFeaturedProducts(products) {
+            const featuredContainer = document.getElementById('featured-products');
+            if (!featuredContainer) return;
+
+            featuredContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="w-full product-img">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-3 text-sm">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-teal-600 font-bold">$${product.price.toFixed(2)}</span>
+                            <button class="add-to-cart bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded-full text-sm transition duration-300" data-id="${product.id}">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                featuredContainer.appendChild(productCard);
+
+                // Add event listener to Add to Cart button
+                const addToCartBtn = productCard.querySelector('.add-to-cart');
+                addToCartBtn.addEventListener('click', () => addToCart(product));
+            });
+        }
+
+        // Add to cart function
+        function addToCart(product) {
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            // Save cart to local storage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart UI
+            updateCartUI();
+            
+            // Show cart
+            toggleCart(true);
+
+            // Save cart to database
+            saveCartToDb(cart);
+        }
+
+        // Remove from cart function
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            saveCartToDb(cart);
+        }
+
+        // Update cart quantity
+        function updateCartQuantity(productId, newQuantity) {
+            if (newQuantity < 1) return;
+            
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+                saveCartToDb(cart);
+            }
+        }
+
+        // Save cart to database
+        async function saveCartToDb(cartItems) {
+            showLoading();
+            try {
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 8yz7EJHfcObtkmvSfpdz7HvbaGr1'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        appSlug: appSlug,
+                        action: 'create',
+                        table: 'cart',
+                        data: { items: cartItems }
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('Cart saved to database', data);
+                hideLoading();
+            } catch (error) {
+                console.error('Error saving cart to database:', error);
+                hideLoading();
+            }
+        }
+
+        // Load cart from database
+        async function loadCartFromDb() {
+            showLoading();
+            try {
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 8yz7EJHfcObtkmvSfpdz7HvbaGr1'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        appSlug: appSlug,
+                        action: 'read',
+                        table: 'cart'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.error && data.data && data.data.length > 0) {
+                    // Get the most recent cart data
+                    const sortedData = data.data.sort((a, b) => 
+                        new Date(b.created_at) - new Date(a.created_at)
+                    );
+                    
+                    const latestCart = sortedData[0].data.items;
+                    cart = latestCart;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartUI();
+                    console.log('Cart loaded from database', cart);
+                }
+                hideLoading();
+            } catch (error) {
+                console.error('Error loading cart from database:', error);
+                hideLoading();
+            }
+        }
+
+        // Update cart UI
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            // Update cart count
+            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            
+            // Update cart items display
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartSubtotal.textContent = '$0.00';
+                checkoutBtn.disabled = true;
+                
+                if (cartItemsContainer) {
+                    cartItemsContainer.innerHTML = '';
+                    cartItemsContainer.appendChild(emptyCartMessage);
+                }
+                return;
+            }
+            
+            // Hide empty cart message and enable checkout button
+            emptyCartMessage.classList.add('hidden');
+            checkoutBtn.disabled = false;
+            
+            // Calculate subtotal
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Update order summary if visible
+            const orderSubtotal = document.getElementById('order-subtotal');
+            const orderTotal = document.getElementById('order-total');
+            if (orderSubtotal && orderTotal) {
+                orderSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+                orderTotal.textContent = `$${(subtotal + 5).toFixed(2)}`; // $5 shipping
+            }
+            
+            // Clear and repopulate cart items
+            if (cartItemsContainer) {
+                cartItemsContainer.innerHTML = '';
+                
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex items-center border-b py-4';
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                        <div class="ml-4 flex-grow">
+                            <div class="font-medium">${item.name}</div>
+                            <div class="text-teal-600">$${item.price.toFixed(2)}</div>
+                            <div class="flex items-center mt-2">
+                                <button class="decrease-quantity text-gray-500 w-6 h-6 flex items-center justify-center border rounded" data-id="${item.id}">-</button>
+                                <span class="mx-2">${item.quantity}</span>
+                                <button class="increase-quantity text-gray-500 w-6 h-6 flex items-center justify-center border rounded" data-id="${item.id}">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item text-gray-400 hover:text-red-500 ml-2" data-id="${item.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                    
+                    // Add event listeners
+                    cartItem.querySelector('.decrease-quantity').addEventListener('click', () => {
+                        if (item.quantity > 1) {
+                            updateCartQuantity(item.id, item.quantity - 1);
+                        } else {
+                            removeFromCart(item.id);
+                        }
+                    });
+                    
+                    cartItem.querySelector('.increase-quantity').addEventListener('click', () => {
+                        updateCartQuantity(item.id, item.quantity + 1);
+                    });
+                    
+                    cartItem.querySelector('.remove-item').addEventListener('click', () => {
+                        removeFromCart(item.id);
+                    });
+                });
+            }
+        }
+
+        // Toggle cart function
+        function toggleCart(show = null) {
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            
+            if (show === null) {
+                // Toggle
+                cartSidebar.classList.toggle('translate-x-full');
+                cartOverlay.classList.toggle('hidden');
+            } else if (show) {
+                // Show
+                cartSidebar.classList.remove('translate-x-full');
+                cartOverlay.classList.remove('hidden');
+            } else {
+                // Hide
+                cartSidebar.classList.add('translate-x-full');
+                cartOverlay.classList.add('hidden');
+            }
+            
+            // If showing cart, update UI
+            if (!cartSidebar.classList.contains('translate-x-full')) {
+                updateCartUI();
+            }
+        }
+
+        // Filter products by category
+        function filterProducts() {
+            const category = document.getElementById('category-filter').value;
+            const sortBy = document.getElementById('sort-by').value;
+            const productCards = document.querySelectorAll('#all-products > div');
+            
+            productCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            sortProducts(sortBy);
+        }
+
+        // Sort products
+        function sortProducts(sortBy) {
+            const productsContainer = document.getElementById('all-products');
+            const productCards = Array.from(productsContainer.children);
+            
+            productCards.sort((a, b) => {
+                const priceA = parseFloat(a.querySelector('.text-teal-600').textContent.replace('$', ''));
+                const priceB = parseFloat(b.querySelector('.text-teal-600').textContent.replace('$', ''));
+                const nameA = a.querySelector('h3').textContent;
+                const nameB = b.querySelector('h3').textContent;
+                
+                if (sortBy === 'price-low') {
+                    return priceA - priceB;
+                } else if (sortBy === 'price-high') {
+                    return priceB - priceA;
+                } else if (sortBy === 'name') {
+                    return nameA.localeCompare(nameB);
+                }
+                
+                // Default sorting (by ID or as they appear in the data)
+                return 0;
+            });
+            
+            // Clear and append sorted products
+            productsContainer.innerHTML = '';
+            productCards.forEach(card => productsContainer.appendChild(card));
+        }
+
+        // Show/hide loading indicator
+        function showLoading() {
+            const loading = document.getElementById('loading');
+            loading.classList.remove('hidden');
+        }
+        
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            loading.classList.add('hidden');
+        }
+
+        // Navigation between pages
+        function navigateTo(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+                
+                // Update active nav link
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('font-bold');
+                    } else {
+                        link.classList.remove('font-bold');
+                    }
+                });
+            }
+        }
+
+        // Submit order
+        async function submitOrder(formData) {
+            showLoading();
+            try {
+                // Generate order information
+                const orderNumber = 'ORD-' + Date.now().toString().slice(-8);
+                const orderTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5; // $5 shipping
+                
+                const orderData = {
+                    orderNumber: orderNumber,
+                    customer: {
+                        name: formData.get('full-name'),
+                        email: formData.get('email-address'),
+                        address: formData.get('shipping-address')
+                    },
+                    items: cart,
+                    paymentMethod: formData.get('payment-method'),
+                    subtotal: orderTotal - 5,
+                    shipping: 5,
+                    total: orderTotal,
+                    status: 'pending',
+                    date: new Date().toISOString()
+                };
+                
+                // Save order to database
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 8yz7EJHfcObtkmvSfpdz7HvbaGr1'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        appSlug: appSlug,
+                        action: 'create',
+                        table: 'orders',
+                        data: orderData
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('Order saved to database', data);
+                
+                // Clear the cart
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+                await saveCartToDb(cart);
+                
+                // Show confirmation and set order number
+                document.getElementById('order-number').textContent = orderNumber;
+                hideLoading();
+                
+                // Hide checkout modal and show confirmation
+                document.getElementById('checkout-modal').classList.add('hidden');
+                document.getElementById('confirmation-modal').classList.remove('hidden');
+                
+                return true;
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                hideLoading();
+                alert('There was a problem placing your order. Please try again.');
+                return false;
+            }
+        }
+
+        // Document Ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load products and cart
+            loadProducts();
+            loadCartFromDb();
+            
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    navigateTo(pageId);
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Cart buttons
+            document.getElementById('cart-btn').addEventListener('click', () => toggleCart());
+            document.getElementById('close-cart').addEventListener('click', () => toggleCart(false));
+            document.getElementById('cart-overlay').addEventListener('click', () => toggleCart(false));
+            document.getElementById('continue-shopping').addEventListener('click', () => toggleCart(false));
+            
+            // Checkout flow
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                document.getElementById('cart-sidebar').classList.add('translate-x-full');
+                document.getElementById('cart-overlay').classList.add('hidden');
+                document.getElementById('checkout-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('close-checkout').addEventListener('click', () => {
+                document.getElementById('checkout-modal').classList.add('hidden');
+            });
+            
+            // Continue shopping after order
+            document.getElementById('continue-shopping-final').addEventListener('click', () => {
+                document.getElementById('confirmation-modal').classList.add('hidden');
+                navigateTo('products');
+            });
+            
+            // Checkout form submission
+            document.getElementById('checkout-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                submitOrder(formData);
+            });
+            
+            // Filter and sort products
+            const categoryFilter = document.getElementById('category-filter');
+            const sortByFilter = document.getElementById('sort-by');
+            
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterProducts);
+            }
+            
+            if (sortByFilter) {
+                sortByFilter.addEventListener('change', () => {
+                    sortProducts(sortByFilter.value);
+                });
+            }
+            
+            // Contact form submission
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('name').value;
+                    alert(`Thank you, ${name}! Your message has been sent.`);
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
